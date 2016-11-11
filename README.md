@@ -218,7 +218,7 @@ Para ejecutar la aplicación en su totalidad hay que tener los siguientes
 servicios en funcionamiento:
 
 ```
-sudo apt-get install postgres                       # para la base de datos
+sudo apt-get install postgresql                     # para la base de datos
 sudo apt-get install imagemagick                    # para la generación del captcha
 sudo apt-get install redis-server                   # para la gestión de las colas de trabajo (resque)
 sudo apt-get install libpq-dev                      # para la gema pg
