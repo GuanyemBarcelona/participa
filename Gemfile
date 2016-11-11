@@ -2,6 +2,15 @@ source 'https://rubygems.org'
 
 ruby '2.3.3'
 
+# @todo Revisit the warnings fixed by this in Bundler 2, I guess they will be
+# fixed and this won't be needed
+#
+git_source(:github) do |repo_name|
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
+
+  "https://github.com/#{repo_name}.git"
+end
+
 gem 'rails', '~> 4.2.2'
 gem 'sqlite3'
 gem 'sass-rails'

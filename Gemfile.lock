@@ -1,11 +1,11 @@
 GIT
-  remote: git://github.com/podemos-info/norma43.git
+  remote: https://github.com/podemos-info/norma43.git
   revision: 98e537e2e5a60394e53b7447221187d0e497cf2c
   specs:
     norma43 (0.3.2)
 
 GIT
-  remote: git://github.com/radar/paranoia.git
+  remote: https://github.com/radar/paranoia.git
   revision: 3b6ff6ec3125c57025c07838ad85fcd8e93c211a
   branch: rails4
   specs:
@@ -13,7 +13,7 @@ GIT
       activerecord (~> 4.0)
 
 GIT
-  remote: git://github.com/resque/resque.git
+  remote: https://github.com/resque/resque.git
   revision: 20d885065ac19e7f7d7a982f4ed1296083db0300
   specs:
     resque (1.27.0)
