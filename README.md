@@ -168,9 +168,9 @@ Se pueden comprobar los tests con
 rake test
 ```
 
-Todos deberían dar OK o SKIP (significa que se ipasa de alto, y que hay que
+Todos deberían dar OK o SKIP (significa que se pasa por alto, y que hay que
 programarlo). Una vez se libere el código se integrará con
-[travis-sci](http://travis-ci.org/).
+[travis-ci](http://travis-ci.org/).
 
 ## APIs externas
 
@@ -202,8 +202,8 @@ programarlo). Una vez se libere el código se integrará con
 
 * En desarrollo, para comprobar el envio de correos, utilizamos
   [mailcatcher](http://mailcatcher.me/), una gema que levanta un servidor SMTP
-  en el puerto 1025 y una interfaz web para ver los correo s que se envían en
-  en el puerto 1080. Para levantarlo ejecutar el comando `mailcatcher`
+  en el puerto 1025 y una interfaz web para ver los correos que se envían en el
+  puerto 1080. Para levantarlo ejecutar el comando `mailcatcher`
 
 * Para el envío de correo en producción usamos
   [Amazon SES](http://aws.amazon.com/es/ses/). La configuración va en
