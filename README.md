@@ -153,8 +153,8 @@ siguientes:
 bundle install
 cp config/database.yml.example config/database.yml
 cp config/secrets.yml.example config/secrets.yml
-rake db:migrate
-rails server
+bin/rake db:migrate
+bin/rails server
 ```
 
 Aparte de esto para algunas acciones utilizamos [resque](), una cola para
@@ -165,7 +165,7 @@ trabajos asincronos.
 Se pueden comprobar los tests con
 
 ```
-rake test
+bin/rake test
 ```
 
 Todos deberían dar OK o SKIP (significa que se pasa por alto, y que hay que
@@ -185,32 +185,33 @@ programarlo). Una vez se libere el código se integrará con
     * [Sobre la API REST general de AgoraVoting](https://agora-ciudadana.readthedocs.org/).
 
 * Para el envío de SMS usamos [esendex](http://esendex.es/). Puede comprobarse
-  con el comando `rake esendex:validate[username,password,account_reference]`.
+  con el comando `bin/rake esendex:validate[username,password,account_reference]`.
   La configuración de la autenticación se encuentra en unas claves de
   `secrets.yml`.
 
 * Para el control de excepciones en staging y production usamos una instancia
   privada de la Asociación aLabs de [errbit](https://github.com/errbit/errbit),
   una aplicación libre basada en la API de [airbrake](https://airbrake.io/).
-  Puede comprobarse la conexión con el servidor con el comando `rake
+  Puede comprobarse la conexión con el servidor con el comando `bin/rake
   airbrake:test`. La configuración de la autenticación se encuentra en unas
   claves de `secrets.yml`.
 
 * Para la gestión de las colas de trabajo utilizamos
   [resque](https://github.com/resque/resque/), que usa como DDBB redis. Un
-  comando útil para desarrollo es el de iniciar un worker: `rake resque:work`
+  comando útil para desarrollo es el de iniciar un worker: `bin/rake
+  resque:work`
 
 * En desarrollo, para comprobar el envio de correos, utilizamos
   [mailcatcher](http://mailcatcher.me/), una gema que levanta un servidor SMTP
   en el puerto 1025 y una interfaz web para ver los correos que se envían en el
-  puerto 1080. Para levantarlo ejecutar el comando `mailcatcher`
+  puerto 1080. Para levantarlo ejecutar el comando `bin/mailcatcher`
 
 * Para el envío de correo en producción usamos
   [Amazon SES](http://aws.amazon.com/es/ses/). La configuración va en
   `config/secrets.yml`.
 
 * Para descargar las últimas iniciativas ciudadanas en Plaza Podemos ejecutamos
-  el comando: `rake podemos:reddit`
+  el comando: `bin/rake podemos:reddit`
 
 ## Dependencias
 

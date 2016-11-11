@@ -35,9 +35,9 @@ bundle install
 cp config/database.yml.example config/database.yml
 cp config/secrets.yml.example config/secrets.yml
 
-rake db:migrate
-mailcatcher
-rails server -b 0.0.0.0 
+bin/rake db:migrate
+bin/mailcatcher
+bin/rails server -b 0.0.0.0 
 EOF
 
 # TODO: start resque
