@@ -166,5 +166,8 @@ class PageController < ApplicationController
   def condiciones_uso_correo
     render :form_iframe, locals: { title: "Condiciones de uso del correo electrónico PODEMOS", form_id: 80, extra_qs:"" }
   end
-  
+
+  def votacio_preacord
+    render layout: 'minimal'
+  end
 end

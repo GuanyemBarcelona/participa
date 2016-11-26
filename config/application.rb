@@ -28,10 +28,7 @@ module Participa
     
      # participa overrides start
     folder = Rails.application.secrets.organization["folder"]
-    config.autoload_paths += [ "#{Rails.root}/vendor/overrides/#{folder}/app/models" ]
-    config.autoload_paths += [ "#{Rails.root}/vendor/overrides/#{folder}/app/controllers" ]
-    #config.autoload_paths += [ "app/models" ]
-    #config.autoload_paths += [ "app/controllers" ]
+
     %w( images javascripts stylesheets ).each do |type|
       config.assets.paths << Rails.root.join("vendor", "overrides", folder, "app", "assets", type)
     end
