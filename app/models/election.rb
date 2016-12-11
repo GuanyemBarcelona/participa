@@ -1,9 +1,9 @@
 class Election < ActiveRecord::Base
   include FlagShihTzu
 
-  SCOPE = [["Estatal", 0], ["Comunidad", 1], ["Provincial", 2], ["Municipal", 3], ["Insular", 4], ["Extranjeros", 5]]
+  SCOPE = [["Estatal", 0], ["Comunidad", 1], ["Provincial", 2], ["Municipal", 3], ["Insular", 4], ["Extranjeros", 5], ["Distritos", 6]]
   
-  has_flags 1 => :requires_sms_check
+  has_flags 1 => :requires_sms_check, check_for_column: false
 
   validates :title, :starts_at, :ends_at, :agora_election_id, :scope, presence: true
   has_many :votes
@@ -39,6 +39,7 @@ class Election < ActiveRecord::Base
                   when 2 then " en #{user.vote_province_name}"
                   when 3 then " en #{user.vote_town_name}"
                   when 4 then " en #{user.vote_island_name}"      
+                  when 6 then " en #{user.vote_district_name}"
                 end
       if not has_valid_location_for? user
         suffix = " (no hay votación#{suffix})"
@@ -54,12 +55,13 @@ class Election < ActiveRecord::Base
 
   def has_valid_location_for? user
     case self.scope
-      when 0 then self.election_locations.any?
+      when 0 then true
       when 1 then user.has_vote_town? and self.election_locations.any? {|l| l.location == user.vote_autonomy_numeric}
       when 2 then user.has_vote_town? and self.election_locations.any? {|l| l.location == user.vote_province_numeric}
       when 3 then user.has_vote_town? and self.election_locations.any? {|l| l.location == user.vote_town_numeric}
       when 4 then user.has_vote_town? and self.election_locations.any? {|l| l.location == user.vote_island_numeric}
-      when 5 then user.country!="ES" and self.election_locations.any?
+      when 5 then user.country!="ES"
+      when 6 then user.has_vote_town? and self.election_locations.any? {|l| l.location == user.vote_district_numeric}
     end
   end
 
@@ -75,11 +77,13 @@ class Election < ActiveRecord::Base
       when 3 then User.confirmed.not_banned.where(vote_town: self.election_locations.map {|l| "m_#{l.location[0..1]}_#{l.location[2..4]}_#{l.location[5]}" }).count
       when 4 then User.confirmed.not_banned.ransack( {vote_island_in: self.election_locations.map {|l| "i_#{l.location}" }}).result.count
       when 5 then User.confirmed.not_banned.where.not(country:"ES").count
+      when 6 then 
+      when 6 then User.confirmed.not_banned.where(district: self.election_locations.map {|l| "d_#{l.location}" }).count
     end
   end
 
   def multiple_territories?
-    [1,2,3,4].member? self.scope
+    [1,2,3,4,6].member? self.scope
   end
 
   def scoped_agora_election_id user
@@ -92,11 +96,14 @@ class Election < ActiveRecord::Base
         user.vote_town_numeric
       when 4
         user.vote_island_numeric
+      when 6
+        user.vote_district_numeric
       else
         "00"
     end
+    Rails.logger.info "user_location: #{user_location}"
     election_location = self.election_locations.find_by_location user_location
-    election_location.vote_id
+    "#{self.agora_election_id}#{election_location.override or election_location.location}#{election_location.agora_version}".to_i
   end
 
   def locations

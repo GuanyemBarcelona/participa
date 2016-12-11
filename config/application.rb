@@ -2,11 +2,6 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 
-def require_override file
-  file = "./vendor/overrides/#{Rails.application.secrets.organization["folder"]}/#{file}"
-  require file if File.exists? file
-end
-
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
@@ -19,8 +14,8 @@ module Participa
 
     config.exceptions_app = self.routes
     config.time_zone = 'Madrid'
-    config.i18n.default_locale = :es
-    config.i18n.available_locales = [ :es, :ca, :eu, :ga ]
+    config.i18n.default_locale = :ca
+    config.i18n.available_locales = [ :es, :ca ]
     config.i18n.fallbacks = [:es, :en] # https://github.com/jim/carmen-rails/issues/13 
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', 'carmen', '*.{rb,yml}').to_s]
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', 'carmen', 'es', '*.{rb,yml}').to_s]
@@ -28,10 +23,7 @@ module Participa
     
      # participa overrides start
     folder = Rails.application.secrets.organization["folder"]
-    config.autoload_paths += [ "#{Rails.root}/vendor/overrides/#{folder}/app/models" ]
-    config.autoload_paths += [ "#{Rails.root}/vendor/overrides/#{folder}/app/controllers" ]
-    #config.autoload_paths += [ "app/models" ]
-    #config.autoload_paths += [ "app/controllers" ]
+
     %w( images javascripts stylesheets ).each do |type|
       config.assets.paths << Rails.root.join("vendor", "overrides", folder, "app", "assets", type)
     end
@@ -41,11 +33,13 @@ module Participa
     config.generators do |g|
       g.test_framework :test_unit, fixture: true
     end
+
+    config.to_prepare do
+      Devise::Mailer.layout "email"
+    end
   end
 end
 
 Rails.application.routes.default_url_options[:host] = Rails.application.secrets.host
 
 require 'add_unique_month_to_dates'
-
-require_override "config/application.rb"

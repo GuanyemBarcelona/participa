@@ -24,6 +24,14 @@ class RegistrationsController < Devise::RegistrationsController
     render partial: 'municipies_select', locals:{country: "ES", province: @user_location[:vote_province], town: @user_location[:vote_town], disabled: false, required: false, field: :vote_town, title:"Municipio de participación"}
   end
 
+  def new
+    if Rails.application.secrets.features["allow_inscription"]
+      super
+    else
+      redirect_to root_path, flash: { notice: 'Registrations are not open.' }
+    end
+  end
+
   def create
     build_resource(sign_up_params)
     if resource.valid_with_captcha?
@@ -96,21 +104,14 @@ class RegistrationsController < Devise::RegistrationsController
   # http://www.jacopretorius.net/2014/03/adding-custom-fields-to-your-devise-user-model-in-rails-4.html
 
   def sign_up_params
-    # NEVER allow setting admin, flags, sms or verification fields here
-    #
-    params.require(:user).permit(:first_name, :last_name, :email, :email_confirmation, :password, :password_confirmation, :born_at, :wants_newsletter, :document_type, :document_vatid, :terms_of_service, :over_18, :address, :town, :province, :vote_town, :vote_province, :postal_code, :country, :captcha, :captcha_key)
+    params.require(:user).permit(:first_name, :last_name, :email, :email_confirmation, :password, :password_confirmation, :born_at, :wants_newsletter, :document_type, :document_vatid, :terms_of_service, :over_18, :inscription, :address, :district, :vote_town, :vote_province, :postal_code, :captcha, :captcha_key)
   end
 
   def account_update_params
-    # NEVER allow setting admin, flags, sms or verification fields here
-    #
-    # We only allow changing location when the user can change it :P
-    #
     if current_user.can_change_vote_location?
-      params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :current_password, :born_at, :wants_newsletter, :address, :postal_code, :country, :province, :town, :vote_province, :vote_town)
+      params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :current_password, :born_at, :wants_newsletter, :address, :postal_code, :district, :vote_province, :vote_town)
     else
-      params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :current_password, :born_at, :wants_newsletter, :address, :postal_code, :country, :province, :town)
+      params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :current_password, :born_at, :wants_newsletter, :address, :postal_code, :district)
     end
   end
-
 end

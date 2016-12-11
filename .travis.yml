@@ -1,7 +1,7 @@
 # .travis.yml
 language: ruby
 rvm:
-  - 2.2.2
+  - 2.3.3
 cache: bundler
 before_script:
   - cp config/secrets.yml.example config/secrets.yml
@@ -11,3 +11,6 @@ before_script:
   - bundle exec rake db:create
   - bundle exec rake db:migrate
 script: bundle exec rake test
+branches:
+  only:
+    - master
