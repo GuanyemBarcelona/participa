@@ -65,7 +65,7 @@ group :development, :test do
   gem 'capistrano-rails'
   gem 'capistrano-passenger'
   gem 'capistrano-rvm'
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'byebug'
   gem 'better_errors'
   gem 'binding_of_caller'
