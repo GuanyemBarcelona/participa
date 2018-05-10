@@ -625,11 +625,11 @@ ActiveRecord::Schema.define(version: 20170306102957) do
     t.string   "vote_town"
     t.integer  "flags",                    default: 0,  null: false
     t.datetime "participation_team_at"
-    t.datetime "sms_check_at"
-    t.string   "vote_district"
+    t.integer  "district"
     t.integer  "verified_by_id"
     t.datetime "verified_at"
-    t.integer  "district"
+    t.datetime "sms_check_at"
+    t.string   "vote_district"
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
