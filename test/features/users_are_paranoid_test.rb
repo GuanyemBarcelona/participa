@@ -31,7 +31,7 @@ feature "UsersAreParanoid" do
     user = FactoryBot.build(:user)
     # XXX pasca - comento validaciones de momento, investigar porqué no se
     # guarda el user, puede ser por el captcha??
-    skip
+    #skip
 
     # first creation attempt, receive OK message and create it
     assert_equal 0, User.all.count

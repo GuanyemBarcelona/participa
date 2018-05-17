@@ -36,10 +36,9 @@ class PodemosImportTest < ActiveSupport::TestCase
     assert_equal PodemosImport.convert_province("48002", "bla", "Tanganika"), "Tanganika"
   end
 
-  test "should #convert_country= work" do
+  test "should #convert_country work" do
     # FIXME: failing tests
     skip
-
     assert_equal PodemosImport.convert_country("Germany"), "DE"
     assert_equal PodemosImport.convert_country("France"), "FR"
     assert_equal PodemosImport.convert_country("Ireland"), "IE"
@@ -49,5 +48,4 @@ class PodemosImportTest < ActiveSupport::TestCase
     assert_equal PodemosImport.convert_country("Bélgica"), "BE"
     assert_equal PodemosImport.convert_country("Invalid"), "Invalid"
   end
-
 end

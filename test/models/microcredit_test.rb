@@ -118,7 +118,7 @@ class MicrocreditTest < ActiveSupport::TestCase
   end
 
   test "should .should_count? amount, confirmed work" do
-    skip
+    #skip
   end
 
   test "should .phase_remaining work" do
