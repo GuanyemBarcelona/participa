@@ -11,7 +11,7 @@ class PodemosImportTest < ActiveSupport::TestCase
 #    User.count
 #  end
 
-  # DOCUMENT: Pasaporte NIE DNI 
+  # DOCUMENT: Pasaporte NIE DNI
 
   test "should #convert_document_type work" do
     assert_equal 1, PodemosImport.convert_document_type("DNI / NIE", "N888888")
@@ -32,11 +32,11 @@ class PodemosImportTest < ActiveSupport::TestCase
   test "should #convert_province work" do
     assert_equal PodemosImport.convert_province("28002", "España", "Madrid"), "M"
     assert_equal PodemosImport.convert_province("48002", "Spain", "Bilbao"), "BI"
-    assert_equal PodemosImport.convert_province("48002", "España", "Bilbao"), "BI" 
+    assert_equal PodemosImport.convert_province("48002", "España", "Bilbao"), "BI"
     assert_equal PodemosImport.convert_province("48002", "bla", "Tanganika"), "Tanganika"
   end
-  
-  test "should #convert_country work" do
+
+  test "should #convert_country= work" do
     # FIXME: failing tests
     skip
 
@@ -49,5 +49,5 @@ class PodemosImportTest < ActiveSupport::TestCase
     assert_equal PodemosImport.convert_country("Bélgica"), "BE"
     assert_equal PodemosImport.convert_country("Invalid"), "Invalid"
   end
-  
+
 end

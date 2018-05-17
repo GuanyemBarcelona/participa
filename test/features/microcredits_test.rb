@@ -3,7 +3,7 @@ require "test_helper"
 feature "Microcredits" do
 
   scenario "new loan - anonymous user" do
-    skip
+    #skip
     #microcredit = FactoryBot.create(:microcredit)
     #user = FactoryBot.build(:user)
 
@@ -35,7 +35,7 @@ feature "Microcredits" do
   end
 
   scenario "new loan - logged in user" do
-    skip 
+    #skip 
     #microcredit = FactoryBot.create(:microcredit)
     #user = FactoryBot.create(:user)
 

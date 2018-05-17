@@ -12,8 +12,8 @@ feature "ParticipationTeams" do
     page.must_have_content "Nos encontramos a un momento decisivo para cambiar"
 
     # FIXME: failing tests
-    skip
-    
+    #skip
+
     #click_link "¡Únete", match: :first
     #page.must_have_content "En los próximos días nos pondremos en contacto contigo."
 

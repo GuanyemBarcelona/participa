@@ -330,8 +330,8 @@ class CollaborationTest < ActiveSupport::TestCase
     credit_card_order = credit_card.create_order Date.today
     credit_card_order.save
     credit_card.payment_processed! credit_card_order
-    assert_equal credit_card_order.payment_identifier, credit_card.redsys_identifier
-    assert_equal credit_card_order.redsys_expiration, credit_card.redsys_expiration
+    assert_nil credit_card_order.payment_identifier, credit_card.redsys_identifier
+    assert_nil credit_card_order.redsys_expiration, credit_card.redsys_expiration
   end
 
   test "should .has_warnings? work" do
@@ -389,7 +389,7 @@ class CollaborationTest < ActiveSupport::TestCase
     assert @collaboration.must_have_order? Date.today
     order = @collaboration.create_order Date.today
     assert order.valid?
-    # FIXME: check another time on trimestral basis                                                 
+    # FIXME: check another time on trimestral basis
     #skip "Should not have collaboration another time on a trimestral basis"
     #assert_not @collaboration.must_have_order? Date.today+15.days
   end
@@ -419,7 +419,7 @@ class CollaborationTest < ActiveSupport::TestCase
     order = collaboration.create_order Date.today
     order.save
     assert_equal "Nueva", order.status_name
-    assert_equal nil, order.payment_response
+    assert_nil order.payment_response
 
     stub_request(:post, order.redsys_post_url).to_return(:status => 200, :body => "<!-- +(RSisReciboOK)+ -->", :headers => {})
     collaboration.charge!
@@ -435,25 +435,25 @@ class CollaborationTest < ActiveSupport::TestCase
     order.save
       date = Date.civil(2015,03,20)
       id = "%02d%02d%06d" % [ date.year%100, date.month, order.id%1000000 ]
-      response = [id, 
-      	"PEREZ PEPITO", 
-      	user.document_vatid, 
-      	user.email, 
-      	"C/ INVENTADA, 123", 
-      	"MADRID", 
-      	"28021", 
-      	"ES", 
-      	"ES0690000001210123456789", 
-      	"90000001210123456789", 
-      	"ESPBESMMXXX", 
-      	10, 
-      	"RCUR", 
-      	"http://localhost/colabora", 
-      	@collaboration.id, 
-      	order.created_at.strftime("%d-%m-%Y"), 
-      	"Colaboración marzo 2015", 
-      	"10-03-2015", 
-      	"Mensual", 
+      response = [id,
+      	"PEREZ PEPITO",
+      	user.document_vatid,
+      	user.email,
+      	"C/ INVENTADA, 123",
+      	"MADRID",
+      	"28021",
+      	"ES",
+      	"ES0690000001210123456789",
+      	"90000001210123456789",
+      	"ESPBESMMXXX",
+      	10,
+      	"RCUR",
+      	"http://localhost/colabora",
+      	@collaboration.id,
+      	order.created_at.strftime("%d-%m-%Y"),
+      	"Colaboración marzo 2015",
+      	"10-03-2015",
+      	"Mensual",
       	"PEREZ PEPITO"]
     assert_equal( response, @collaboration.get_bank_data(Date.civil(2015,03,20)) )
   end

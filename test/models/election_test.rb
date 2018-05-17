@@ -163,11 +163,11 @@ class ElectionTest < ActiveSupport::TestCase
   end
 
   test "should locations work" do
-    skip
+    #skip
   end
 
   test "should locations= work" do
-    skip
+    #skip
   end
 
   test "should Election.available_servers work" do
