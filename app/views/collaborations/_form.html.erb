@@ -2,6 +2,16 @@
   <legend class="invisible">Datos de la colaboración</legend>
 
   <div class="inputlabel-box">
+    <% if @collaboration.errors.include?(:type_amount) %>
+        <%= field_notice_box %>
+    <% end %>
+    <%= f.input :type_amount,
+                required: true,
+                as: :select,
+                collection: Collaboration::TYPE_AMOUNT %>
+  </div>
+
+  <div class="inputlabel-box">
     <% if @collaboration.errors.include?(:amount) %>
         <%= field_notice_box %>
     <% end %>
@@ -87,7 +97,7 @@
       <div class="input-box js-collaboration-assignment-autonomy">
         <%= f.check_box :for_autonomy_cc, class:"checkbox"%>
         <p class="text-xl">Deseo colaborar con mi consejo autonómico.</p>
-      </div>            
+      </div>
 
       <div class="input-box js-collaboration-assignment-town">
         <%= f.check_box :for_town_cc, class:"checkbox"%>

@@ -44,13 +44,13 @@ if Rails.application.secrets.features["collaborations"]
   else
     menu false
   end
-  
+
   scope_to Collaboration, association_method: :full_view
   config.sort_order = 'updated_at_desc'
 
   menu :parent => "Colaboraciones"
 
-  permit_params  :user_id, :status, :amount, :frequency, :payment_type, :ccc_entity, :ccc_office, :ccc_dc, :ccc_account, :iban_account, :iban_bic, 
+  permit_params  :user_id, :status, :type_amount, :amount, :frequency, :payment_type, :ccc_entity, :ccc_office, :ccc_dc, :ccc_account, :iban_account, :iban_bic,
     :redsys_identifier, :redsys_expiration, :for_autonomy_cc, :for_town_cc, :for_island_cc
 
   actions :all, :except => [:new]
@@ -72,7 +72,7 @@ if Rails.application.secrets.features["collaborations"]
   scope :town_cc
   scope :island_cc
 
-  index download_links: -> { current_user.is_admin? && current_user.finances_admin? } do
+def index download_links: -> { current_user.is_admin? && current_user.finances_admin? } do
     selectable_column
     id_column
     column :user do |collaboration|
@@ -81,6 +81,9 @@ if Rails.application.secrets.features["collaborations"]
       else
         collaboration.get_user.full_name
       end
+    end
+    column :type_amount, sortable: :amount do |collaboration|
+      collaboration.type_amount
     end
     column :amount, sortable: :amount do |collaboration|
       number_to_euro collaboration.amount
@@ -109,7 +112,7 @@ if Rails.application.secrets.features["collaborations"]
         if collaboration.redsys_expiration<Date.today
           status_tag("Caducada", :error)
         elsif collaboration.redsys_expiration<Date.today+1.month
-          status_tag("Caducará", :warn) 
+          status_tag("Caducará", :warn)
         end
       end
     end
@@ -119,7 +122,7 @@ if Rails.application.secrets.features["collaborations"]
   sidebar "Acciones", 'data-panel' => :collapsed, only: :index, priority: 0 do
     status = Collaboration.has_bank_file? Date.today
 
-    h4 "Pagos con tarjeta" 
+    h4 "Pagos con tarjeta"
     ul do
       li link_to 'Cobrar tarjetas', params.merge(:action => :charge), data: { confirm: "Se enviarán los datos de todas las órdenes para que estas sean cobradas. ¿Deseas continuar?" }
     end
@@ -132,7 +135,7 @@ if Rails.application.secrets.features["collaborations"]
       #  active = status[0] ? " (en progreso)" : ""
       #  li link_to("Descargar fichero para el banco#{active}", params.merge(:action => :download_csv))
       #end
-      li link_to 'Generar fichero en formato SEPA (xml)', params.merge(:action => :generate_sepa_xml) 
+      li link_to 'Generar fichero en formato SEPA (xml)', params.merge(:action => :generate_sepa_xml)
       li link_to 'Generar fichero en formato SEPA (xls)', params.merge(:action => :generate_sepa_xls)
       li do
         this_month = Order.banks.by_date(Date.today, Date.today).to_be_charged.count
@@ -174,10 +177,10 @@ if Rails.application.secrets.features["collaborations"]
       end
     end
   end
-  
-  sidebar "Procesar respuestas del banco", 'data-panel' => :collapsed, :only => :index, priority: 1 do  
+
+  sidebar "Procesar respuestas del banco", 'data-panel' => :collapsed, :only => :index, priority: 1 do
     render("admin/process_bank_response")
-  end 
+  end
 
   sidebar "Ayuda", 'data-panel' => :collapsed, only: :index, priority: 2 do
     h4 "Nomenclatura de las órdenes"
@@ -219,10 +222,10 @@ if Rails.application.secrets.features["collaborations"]
       row :created_at
       row :updated_at
       row :deleted_at
-      
+
       if collaboration.is_bank?
         if collaboration.has_iban_account?
-          row :iban_account 
+          row :iban_account
           row :iban_bic do
             status_tag(t("active_admin.empty"), :error) if collaboration.calculate_bic.nil?
             collaboration.calculate_bic
@@ -254,7 +257,7 @@ if Rails.application.secrets.features["collaborations"]
           if collaboration.redsys_expiration<Date.today
             status_tag("Caducada", :error)
           elsif collaboration.redsys_expiration<Date.today+1.month
-            status_tag("Caducará", :warn) 
+            status_tag("Caducará", :warn)
           end
         end
       end
@@ -262,7 +265,7 @@ if Rails.application.secrets.features["collaborations"]
     if collaboration.get_non_user
       panel "Colaboración antigua" do
         attributes_table_for collaboration.get_non_user do
-          row :legacy_id 
+          row :legacy_id
           row :full_name
           row :document_vatid
           row :email
@@ -271,7 +274,7 @@ if Rails.application.secrets.features["collaborations"]
           row :postal_code
           row :country
           row :province
-          row :phone 
+          row :phone
         end
       end
     end
@@ -286,7 +289,7 @@ if Rails.application.secrets.features["collaborations"]
         column :amount do |order|
           number_to_euro order.amount
         end
-        column :payable_at  
+        column :payable_at
         column :payed_at
       end
     end
@@ -314,8 +317,8 @@ if Rails.application.secrets.features["collaborations"]
     end
     f.actions
   end
-  
-  
+
+
   collection_action :charge, :method => :get do
     Collaboration.credit_cards.pluck(:id).each do |cid|
       if use_resque
@@ -327,7 +330,7 @@ if Rails.application.secrets.features["collaborations"]
     redirect_to :admin_collaborations
   end
 
-  collection_action :generate_orders, :method => :get do 
+  collection_action :generate_orders, :method => :get do
     Collaboration.banks.pluck(:id).each do |cid|
       if use_resque
         Resque.enqueue(PodemosCollaborationWorker, cid)
@@ -348,13 +351,13 @@ if Rails.application.secrets.features["collaborations"]
     end
     redirect_to :admin_collaborations
   end
-  
+
   collection_action :generate_sepa, :method => :get do
     # FIXME No me queda claro el motivo de este lock
     #Collaboration.bank_file_lock true
     Rails.logger.info "=================================\n generate_sepa\n=================================\n"
     filename = "triodos_orders"
-    
+
     respond_to do |format|
         format.xml {
           response.headers['Content-Disposition'] = 'attachment; filename="' + filename + '.xml"'
@@ -368,11 +371,11 @@ if Rails.application.secrets.features["collaborations"]
     end
     #redirect_to :admin_collaborations, flash: { notice: 'Generado fichero xml para Triodos' }
   end
-  
+
   collection_action :generate_sepa_xls, :method => :get do
     redirect_to "/admin/collaborations/generate_sepa.xls"
   end
-  
+
   collection_action :generate_sepa_xml, :method => :get do
     redirect_to "/admin/collaborations/generate_sepa.xml"
   end
@@ -438,7 +441,7 @@ if Rails.application.secrets.features["collaborations"]
       end
     end
     render "admin/process_bank_response_results", locals: {messages: messages}
-  end  
+  end
 
   member_action :charge_order do
     resource.charge!
@@ -446,7 +449,7 @@ if Rails.application.secrets.features["collaborations"]
   end
 
   action_item(:charge_collaboration, only: :show) do
-    if resource.is_credit_card? 
+    if resource.is_credit_card?
       link_to 'Cobrar', charge_order_admin_collaboration_path(id: resource.id), data: { confirm: "Se enviarán los datos de la orden para que esta sea cobrada. ¿Deseas continuar?" }
     else
       link_to 'Generar orden', charge_order_admin_collaboration_path(id: resource.id)
@@ -516,7 +519,7 @@ if Rails.application.secrets.features["collaborations"]
     column :amount_current do |collaboration|
       collaboration.skip_queries_validations = true
       if collaboration.is_payable? and collaboration.must_have_order? Date.today
-        (collaboration.amount/100 * collaboration.frequency) 
+        (collaboration.amount/100 * collaboration.frequency)
       else
         0
       end
