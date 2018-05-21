@@ -83,7 +83,8 @@ es:
         user: "Usuario"
         created_at: "Creada el"
         updated_at: "Actualizada el"
-        amount: "Importe mensual"
+        type_amount: "Tipo de importe"
+        amount: "Importe"
         frequency: "Frecuencia de pago"
         frequency_name: "Frecuencia de pago"
         minimal_year_old: "Edad mínima requerida"
@@ -862,7 +863,7 @@ Al confirmar este formulario aceptáis que:
         third:  Resultado
       submit: Guardar
   tools:
-    index: 
+    index:
       title: "Herramientas de participación ciudadana"
     tool_box:
       box1:
