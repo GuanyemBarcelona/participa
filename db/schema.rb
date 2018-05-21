@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170306102957) do
+ActiveRecord::Schema.define(version: 20180520192928) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(version: 20170306102957) do
     t.boolean  "for_autonomy_cc"
     t.boolean  "for_town_cc"
     t.boolean  "for_island_cc"
+    t.string   "type_amount"
   end
 
   add_index "collaborations", ["deleted_at"], name: "index_collaborations_on_deleted_at"
