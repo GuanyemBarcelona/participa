@@ -72,7 +72,7 @@ if Rails.application.secrets.features["collaborations"]
   scope :town_cc
   scope :island_cc
 
-def index download_links: -> { current_user.is_admin? && current_user.finances_admin? } do
+index download_links: -> { current_user.is_admin? && current_user.finances_admin? } do
     selectable_column
     id_column
     column :user do |collaboration|
@@ -202,6 +202,7 @@ def index download_links: -> { current_user.is_admin? && current_user.finances_a
   filter :status, :as => :select, :collection => Collaboration::STATUS.to_a
   filter :frequency, :as => :select, :collection => Collaboration::FREQUENCIES.to_a
   filter :payment_type, :as => :select, :collection => Order::PAYMENT_TYPES.to_a
+  filter :type_amount, :as => :select, :collaboration => Collaboration::TYPE_AMOUNT
   filter :amount, :as => :select, :collection => Collaboration::AMOUNTS.to_a
   filter :created_at
   filter :for_autonomy_cc
