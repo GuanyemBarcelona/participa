@@ -82,8 +82,8 @@ index download_links: -> { current_user.is_admin? && current_user.finances_admin
         collaboration.get_user.full_name
       end
     end
-    column :type_amount, sortable: :amount do |collaboration|
-      collaboration.type_amount
+    column :type_amount, sortable: :type_amount do |collaboration|
+      collaboration.type_amount==1 ? "Mensual" : "Puntual"
     end
     column :amount, sortable: :amount do |collaboration|
       number_to_euro collaboration.amount
@@ -202,7 +202,7 @@ index download_links: -> { current_user.is_admin? && current_user.finances_admin
   filter :status, :as => :select, :collection => Collaboration::STATUS.to_a
   filter :frequency, :as => :select, :collection => Collaboration::FREQUENCIES.to_a
   filter :payment_type, :as => :select, :collection => Order::PAYMENT_TYPES.to_a
-  filter :type_amount, :as => :select, :collaboration => Collaboration::TYPE_AMOUNT
+  filter :type_amount, :as => :select, :collection => Collaboration::TYPE_AMOUNT.to_a
   filter :amount, :as => :select, :collection => Collaboration::AMOUNTS.to_a
   filter :created_at
   filter :for_autonomy_cc
