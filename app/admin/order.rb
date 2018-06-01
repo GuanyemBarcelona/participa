@@ -4,7 +4,7 @@ ActiveAdmin.register Order do
 
   menu :parent => "Colaboraciones"
 
-  permit_params :status, :reference, :type_amount,:amount, :first, :payment_type, :payment_identifier, :payment_response, :payable_at, :payed_at, :created_at
+  permit_params :status, :reference, :type_amount, :amount, :first, :payment_type, :payment_identifier, :payment_response, :payable_at, :payed_at, :created_at
 
   # Nº RECIBO Es el identificador del cargo a todos los efectos y no se ha de repetir en la remesa y en las remesas sucesivas. Es un nº correlativo
   # NOMBRE
@@ -23,7 +23,7 @@ ActiveAdmin.register Order do
   # "
   # ID - ENTRADA  Codigo del colaborador en la base de datos
   # FECHA DE LA ENTRADA Fecha de alta en la base de datos
-  # COMPROBACIÓN  Es el texto que aparecefrá en el recibo. Sera "Colaboracion "mes x"
+  # COMPROBACIÓN  Es el texto que aparecerá en el recibo. Sera "Colaboracion "mes x"
   # FECHA TRIODOS Fecha de la remesa de recibos
   # FRECUENCIA  Perioricidad
   # TITULAR Titular de la cuenta. Si no indican nada en contra se pondra el mismo que en "nombre".
@@ -72,7 +72,9 @@ ActiveAdmin.register Order do
       end
       row :parent
       row :parent_type
-      row :type_amount
+      row :type_amount do |order|
+        order.type_amount
+      end
       row :amount do |order|
         number_to_euro order.amount
       end
