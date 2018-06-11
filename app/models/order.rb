@@ -10,7 +10,9 @@ class Order < ActiveRecord::Base
   belongs_to :user, -> { with_deleted }
 
   attr_accessor :raw_xml
-  validates :payment_type, :type_amount,:amount, :payable_at, presence: true
+  validates :payment_type, :type_amount, :amount, :payable_at, presence: true
+
+  TYPE_AMOUNT = {"Mensual" => 1, "Puntual" => 0}
 
   STATUS = {"Nueva" => 0, "Sin confirmar" => 1, "OK" => 2, "Alerta" => 3, "Error" => 4, "Devuelta" => 5}
   if Rails.application.secrets.features["collaborations_redsys"]
