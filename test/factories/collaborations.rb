@@ -4,19 +4,20 @@ FactoryBot.define do
   factory :collaboration do
     payment_type 1
     association :user
+    type_amount 1
     amount 1000
     frequency 1
   end
 
-  trait :ccc do 
+  trait :ccc do
     payment_type 2
     ccc_entity '9000'
     ccc_office '0001'
     ccc_dc '21'
     ccc_account '0123456789'
   end
-  
-  trait :iban do 
+
+  trait :iban do
     payment_type 3
     iban_account "ES0690000001210123456789"
     iban_bic "ESPBESMMXXX"
@@ -26,7 +27,7 @@ FactoryBot.define do
     payment_type 1
   end
 
-  trait :foreign_user do 
+  trait :foreign_user do
     association :user, :factory => [:user, :foreign]
   end
 
