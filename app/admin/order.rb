@@ -50,7 +50,9 @@ ActiveAdmin.register Order do
         order.parent.get_user
       end
     end
-    column :type_amount
+    column :type_amount, sortable: :type_amount do |order|
+      order.type_amount==1 ? "Mensual" : "Puntual"
+    end
     column :amount do |order|
       number_to_euro order.amount
     end
