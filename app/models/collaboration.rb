@@ -16,7 +16,7 @@ class Collaboration < ActiveRecord::Base
   has_many :order, as: :parent
 
   attr_accessor :skip_queries_validations
-  validates :payment_type, :type_amount,:amount, :frequency, presence: true
+  validates :payment_type, :type_amount, :amount, :frequency, presence: true
   validates :terms_of_service, acceptance: true
   validates :minimal_year_old, acceptance: true
   validates :user_id, uniqueness: { scope: :deleted_at }, allow_nil: true, allow_blank: true, unless: :skip_queries_validations
@@ -51,6 +51,8 @@ class Collaboration < ActiveRecord::Base
   scope :amount_1, -> { created.where("amount < 1000")}
   scope :amount_2, -> { created.where("amount >= 1000 and amount < 2000")}
   scope :amount_3, -> { created.where("amount > 2000")}
+  scope :type_amount_monthly, -> { created.where(type_amount: 1)}
+  scope :type_amount_punctual, -> { created.where(type_amount: 0)}
 
   scope :incomplete, -> { created.where(status: 0)}
   scope :unconfirmed, -> { created.where(status: 2)}
@@ -221,7 +223,7 @@ class Collaboration < ActiveRecord::Base
       o.parent = self
       o.reference = "Colaboración " + I18n.localize(date, :format => "%B %Y")
       o.first = is_first
-      o.type_amount = self.type_amount ? 1 : 0
+      #o.type_amount = self.type_amount? ? 1 : 0
       o.amount = self.amount*self.frequency
       o.payable_at = date
       o.payment_type = self.is_credit_card? ? 1 : 3
@@ -412,6 +414,7 @@ class Collaboration < ActiveRecord::Base
           self.calculate_iban,
           self.ccc_full,
           self.calculate_bic,
+          order.type_amount,
           order.amount/100,
           order.due_code,
           order.url_source,
