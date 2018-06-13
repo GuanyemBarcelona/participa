@@ -215,7 +215,9 @@ index download_links: -> { current_user.is_admin? && current_user.finances_admin
         collaboration.get_user
       end
       row :payment_type_name
-      row :type_amount
+      row :type_amount do
+        collaboration.type_amount==1 ? "Mensual" : "Puntual"
+      end
       row :amount do
         number_to_euro collaboration.amount
       end
@@ -305,7 +307,7 @@ index download_links: -> { current_user.is_admin? && current_user.finances_admin
     f.inputs "Colaboración" do
       f.input :user_id
       f.input :status, as: :select, collection: Collaboration::STATUS.to_a
-      f.input :type_amount, as: :radio, collection: Collaboration::TYPE_AMOUNTS.to_a
+      f.input :type_amount, as: :radio, collection: Collaboration::TYPE_AMOUNT.to_a
       f.input :amount, as: :radio, collection: Collaboration::AMOUNTS.to_a #, input_html: {disabled: true}
       f.input :frequency, as: :radio, collection: Collaboration::FREQUENCIES.to_a #, input_html: {disabled: true}
       f.input :payment_type, as: :radio, collection: Order::PAYMENT_TYPES.to_a #, input_html: {disabled: true}
