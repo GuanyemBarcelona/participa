@@ -19,6 +19,16 @@
             <legend class="invisible">Nueva colaboración</legend>
 
             <div class="inputlabel-box">
+                <% if @collaboration.errors.include?(:type_amount) %>
+                  <%= field_notice_box %>
+              <% end %>
+              <%= f.input :type_amount,
+                          required: true,
+                          as: :select,
+                          collection: Collaboration::TYPE_AMOUNT %>
+            </div>
+
+            <div class="inputlabel-box">
               <% if @collaboration.errors.include?(:amount) %>
                   <%= field_notice_box %>
               <% end %>
