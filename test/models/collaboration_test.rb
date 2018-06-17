@@ -3,7 +3,7 @@ require 'test_helper'
 class CollaborationTest < ActiveSupport::TestCase
 
   setup do
-    @collaboration = FactoryGirl.create(:collaboration, :ccc)
+    @collaboration = FactoryBot.create(:collaboration, :ccc)
   end
 
   test "should validations on collaborations work" do
@@ -28,13 +28,13 @@ class CollaborationTest < ActiveSupport::TestCase
   end
 
   test "should national and international scopes work" do
-    c1 = FactoryGirl.create(:collaboration, :ccc)
-    c2 = FactoryGirl.create(:collaboration, :iban)
+    c1 = FactoryBot.create(:collaboration, :ccc)
+    c2 = FactoryBot.create(:collaboration, :iban)
     c2.iban_account = "ES0690000001210123456789"
     c2.iban_bic = "ESPBESMMXXX"
     c2.save
 
-    c3 = FactoryGirl.create(:collaboration, :iban)
+    c3 = FactoryBot.create(:collaboration, :iban)
     c3.iban_account = "BE62510007547061"
     c3.iban_bic = "BEXXXXX"
     c3.save
@@ -61,13 +61,13 @@ class CollaborationTest < ActiveSupport::TestCase
   end
 
   test "should .validates_not_passport work" do
-    collaboration = FactoryGirl.build(:collaboration, :foreign_user)
+    collaboration = FactoryBot.build(:collaboration, :foreign_user)
     assert_not collaboration.valid?
     assert(collaboration.errors[:user].include? "No puedes colaborar si no dispones de DNI o NIE.")
   end
 
   test "should .validates_age_over work" do
-    user = FactoryGirl.build(:user)
+    user = FactoryBot.build(:user)
     user.update_attribute(:born_at, DateTime.now-10.years)
     @collaboration.user = user
     assert_not @collaboration.valid?
@@ -199,9 +199,9 @@ class CollaborationTest < ActiveSupport::TestCase
   end
 
   test "should .calculate_bic work" do
-    ccc = FactoryGirl.create(:collaboration, :ccc)
+    ccc = FactoryBot.create(:collaboration, :ccc)
     assert_equal "ESPBESMMXXX", ccc.calculate_bic
-    iban = FactoryGirl.create(:collaboration, :iban)
+    iban = FactoryBot.create(:collaboration, :iban)
     assert_equal "ESPBESMMXXX", iban.calculate_bic
   end
 
@@ -259,7 +259,7 @@ class CollaborationTest < ActiveSupport::TestCase
   end
 
   test "should .check_spanish_bic work" do
-    ccc = FactoryGirl.create(:collaboration, :ccc)
+    ccc = FactoryBot.create(:collaboration, :ccc)
     assert_equal "ESPBESMMXXX", ccc.calculate_bic
   end
 
@@ -299,13 +299,13 @@ class CollaborationTest < ActiveSupport::TestCase
   end
 
   test "should .payment_identifier work" do
-    credit_card = FactoryGirl.create(:collaboration, :credit_card)
+    credit_card = FactoryBot.create(:collaboration, :credit_card)
     credit_card.update_attribute(:redsys_identifier, "XXXXXX")
     assert_equal credit_card.payment_identifier, "XXXXXX"
-    iban = FactoryGirl.create(:collaboration, :iban)
+    iban = FactoryBot.create(:collaboration, :iban)
     iban.update_attribute(:payment_type, 3)
     assert_equal iban.payment_identifier, "ES0690000001210123456789/ESPBESMMXXX"
-    ccc = FactoryGirl.create(:collaboration, :ccc)
+    ccc = FactoryBot.create(:collaboration, :ccc)
     assert_equal ccc.payment_identifier, "ES0690000001210123456789/ESPBESMMXXX"
   end
 
@@ -326,12 +326,12 @@ class CollaborationTest < ActiveSupport::TestCase
     @collaboration.payment_processed! order
     assert_equal 1, @collaboration.status
 
-    credit_card = FactoryGirl.create(:collaboration, :credit_card)
+    credit_card = FactoryBot.create(:collaboration, :credit_card)
     credit_card_order = credit_card.create_order Date.today
     credit_card_order.save
     credit_card.payment_processed! credit_card_order
-    assert_equal credit_card_order.payment_identifier, credit_card.redsys_identifier
-    assert_equal credit_card_order.redsys_expiration, credit_card.redsys_expiration
+    assert_nil credit_card_order.payment_identifier, credit_card.redsys_identifier
+    assert_nil credit_card_order.redsys_expiration, credit_card.redsys_expiration
   end
 
   test "should .has_warnings? work" do
@@ -389,7 +389,7 @@ class CollaborationTest < ActiveSupport::TestCase
     assert @collaboration.must_have_order? Date.today
     order = @collaboration.create_order Date.today
     assert order.valid?
-    # FIXME: check another time on trimestral basis                                                 
+    # FIXME: check another time on trimestral basis
     #skip "Should not have collaboration another time on a trimestral basis"
     #assert_not @collaboration.must_have_order? Date.today+15.days
   end
@@ -414,12 +414,12 @@ class CollaborationTest < ActiveSupport::TestCase
   end
 
   test "should .charge! work" do
-    collaboration = FactoryGirl.create(:collaboration, :credit_card)
+    collaboration = FactoryBot.create(:collaboration, :credit_card)
     collaboration.update_attribute(:status, 2)
     order = collaboration.create_order Date.today
     order.save
     assert_equal "Nueva", order.status_name
-    assert_equal nil, order.payment_response
+    assert_nil order.payment_response
 
     stub_request(:post, order.redsys_post_url).to_return(:status => 200, :body => "<!-- +(RSisReciboOK)+ -->", :headers => {})
     collaboration.charge!
@@ -435,25 +435,25 @@ class CollaborationTest < ActiveSupport::TestCase
     order.save
       date = Date.civil(2015,03,20)
       id = "%02d%02d%06d" % [ date.year%100, date.month, order.id%1000000 ]
-      response = [id, 
-      	"PEREZ PEPITO", 
-      	user.document_vatid, 
-      	user.email, 
-      	"C/ INVENTADA, 123", 
-      	"MADRID", 
-      	"28021", 
-      	"ES", 
-      	"ES0690000001210123456789", 
-      	"90000001210123456789", 
-      	"ESPBESMMXXX", 
-      	10, 
-      	"RCUR", 
-      	"http://localhost/colabora", 
-      	@collaboration.id, 
-      	order.created_at.strftime("%d-%m-%Y"), 
-      	"Colaboración marzo 2015", 
-      	"10-03-2015", 
-      	"Mensual", 
+      response = [id,
+      	"PEREZ PEPITO",
+      	user.document_vatid,
+      	user.email,
+      	"C/ INVENTADA, 123",
+      	"MADRID",
+      	"28021",
+      	"ES",
+      	"ES0690000001210123456789",
+      	"90000001210123456789",
+      	"ESPBESMMXXX",
+      	10,
+      	"RCUR",
+      	"http://localhost/colabora",
+      	@collaboration.id,
+      	order.created_at.strftime("%d-%m-%Y"),
+      	"Colaboración marzo 2015",
+      	"10-03-2015",
+      	"Mensual",
       	"PEREZ PEPITO"]
     assert_equal( response, @collaboration.get_bank_data(Date.civil(2015,03,20)) )
   end
@@ -656,7 +656,7 @@ phone: '666666'"
   ##############################################
 
   test "should not save collaboration if userr is not over legal age (18 years old)" do
-    user = FactoryGirl.build(:user)
+    user = FactoryBot.build(:user)
     user.update_attribute(:born_at, DateTime.now-10.years)
     @collaboration.user = user
     assert_not @collaboration.valid?

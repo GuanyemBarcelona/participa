@@ -66,7 +66,8 @@ ca:
         user: "Usuari/ària"
         created_at: "Creada el"
         updated_at: "Actualitzada el"
-        amount: "Import mensual"
+        type_amount: "Tipus d'import"
+        amount: "Import"
         frequency: "Freqüència de pagament"
         frequency_name: "Freqüència de pagament"
         minimal_year_old: "Edat mínima requerida"
@@ -730,7 +731,7 @@ Amb tres passos molt senzills:
       age: "L'inscrit/a és major de 16 anys - nascut abans de %{date}"
       town: "He verificat un document (DNI/NIE/Passaport, rebut d'un subministrament) que acredita que l'inscrit/a viu a Barcelona."
   tools:
-    index: 
+    index:
       title: "Eines de participació ciutadana"
     tool_box:
       box1:
