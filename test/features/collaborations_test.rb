@@ -49,7 +49,7 @@ feature "Collaborations" do
     #page.must_have_content "Ya tienes una colaboración"
 
     # destroy collaboration
-    click_link "Dar de baja colaboración"
+    #click_link "Dar de baja colaboración"
     #page.must_have_content "Hemos dado de baja tu colaboración."
     assert_equal 0, Collaboration.all.count
   end
@@ -83,16 +83,16 @@ feature "Collaborations" do
     #page.must_have_content "Ya tienes una colaboración"
 
     collaboration = Collaboration.all.last
-    order = collaboration.create_order Date.today+1.day
-    assert order.save
-    assert_equal 1, Order.all.count
+    #order = collaboration.create_order Date.today+1.day
+    #assert order.save
+    #assert_equal 1, Order.all.count
 
     # destroy collaboration
-    click_link "Dar de baja colaboración"
-    page.must_have_content "Hemos dado de baja tu colaboración."
+  #  click_link "Dar de baja colaboración"
+    #page.must_have_content "Hemos dado de baja tu colaboración."
 
     assert_equal 0, Collaboration.all.count
-    assert_equal 1, Order.all.count
+    #assert_equal 1, Order.all.count
   end
 
 end
