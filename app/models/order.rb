@@ -10,19 +10,19 @@ class Order < ActiveRecord::Base
   belongs_to :user, -> { with_deleted }
 
   attr_accessor :raw_xml
-  validates :payment_type, :amount, :payable_at, presence: true
+  validates :payment_type, :type_amount,:amount, :payable_at, presence: true
 
   STATUS = {"Nueva" => 0, "Sin confirmar" => 1, "OK" => 2, "Alerta" => 3, "Error" => 4, "Devuelta" => 5}
   if Rails.application.secrets.features["collaborations_redsys"]
     PAYMENT_TYPES = {
-      I18n.t('podemos.collaboration.order.cc') => 1, 
-      I18n.t('podemos.collaboration.order.ccc') => 2, 
-      I18n.t('podemos.collaboration.order.iban') => 3 
+      I18n.t('podemos.collaboration.order.cc') => 1,
+      I18n.t('podemos.collaboration.order.ccc') => 2,
+      I18n.t('podemos.collaboration.order.iban') => 3
     }
   else
     PAYMENT_TYPES = {
-      I18n.t('podemos.collaboration.order.ccc') => 2, 
-      I18n.t('podemos.collaboration.order.iban') => 3 
+      I18n.t('podemos.collaboration.order.ccc') => 2,
+      I18n.t('podemos.collaboration.order.iban') => 3
     }
   end
 
@@ -60,7 +60,7 @@ class Order < ActiveRecord::Base
   end
 
   def is_paid?
-    !self.payed_at.nil? and [2,3].include? self.status 
+    !self.payed_at.nil? and [2,3].include? self.status
   end
 
   def has_warnings?
@@ -165,14 +165,14 @@ class Order < ActiveRecord::Base
   def mark_as_charging
     self.status = 1
   end
-  
+
   def mark_as_paid! date
-    self.status = 2 
+    self.status = 2
     self.payed_at = date
     self.save
     if self.parent
       self.parent.payment_processed! self
-    end 
+    end
   end
 
   def mark_as_returned! code=nil
@@ -196,7 +196,7 @@ class Order < ActiveRecord::Base
   def self.mark_bank_orders_as_charged!(date=Date.today)
     Order.banks.by_date(date, date).to_be_charged.update_all(status:1)
   end
-  
+
   def self.mark_bank_orders_as_paid!(date=Date.today)
     Collaboration.update_paid_unconfirmed_bank_collaborations(Order.banks.by_date(date, date).charging)
     Order.banks.by_date(date, date).charging.update_all(status:2, payed_at: date)
@@ -260,7 +260,7 @@ class Order < ActiveRecord::Base
   end
 
   def redsys_order_id
-    @order_id ||= 
+    @order_id ||=
       if self.redsys_response and self.first
         self.redsys_response["Ds_Order"]
       else
@@ -271,7 +271,7 @@ class Order < ActiveRecord::Base
         end
       end
   end
-    
+
   def redsys_post_url
     redsys_secret "post_url"
   end
@@ -289,7 +289,7 @@ class Order < ActiveRecord::Base
     msg = if self.first
             "#{msg}#{self.redsys_secret "identifier"}#{self.redsys_secret "secret_key"}"
           else
-            "#{msg}#{self.payment_identifier}true#{self.redsys_secret "secret_key"}"   
+            "#{msg}#{self.payment_identifier}true#{self.redsys_secret "secret_key"}"
           end
 
     Digest::SHA1.hexdigest(msg).upcase
@@ -306,7 +306,7 @@ class Order < ActiveRecord::Base
     msg = "#{msg}#{self.redsys_secret "secret_key"}"
     Digest::SHA1.hexdigest(msg)
   end
-  
+
   def redsys_logger
     @@redsys_logger ||= Logger.new("#{Rails.root}/log/redsys.log")
   end
@@ -352,11 +352,11 @@ class Order < ActiveRecord::Base
 
     if self.parent
       self.parent.payment_processed! self
-    end    
+    end
   end
 
   def redsys_params
-    extra = if self.first 
+    extra = if self.first
             {
               "Ds_Merchant_Identifier"        => self.redsys_secret("identifier"),
               "Ds_Merchant_UrlOK"             => self.parent.ok_url,
@@ -410,7 +410,7 @@ class Order < ActiveRecord::Base
       self.status = 4
     end
     self.save
-    
+
     if self.parent
       self.parent.payment_processed! self
     end
@@ -421,7 +421,7 @@ class Order < ActiveRecord::Base
     when 5
       "Orden devuelta"
     else
-      code =  if self.redsys_response 
+      code =  if self.redsys_response
                 if self.first
                   self.redsys_response["Ds_Response"]
                 else
