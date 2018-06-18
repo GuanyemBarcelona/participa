@@ -61,7 +61,7 @@ ActiveAdmin.register Order do
     actions
   end
 
-  show do
+  show do |order|
     attributes_table do
       row :id
       row :status_name
@@ -74,8 +74,8 @@ ActiveAdmin.register Order do
       end
       row :parent
       row :parent_type
-      row :type_amount do |order|
-        order.type_amount
+      row :type_amount do
+        order.type_amount==1 ? "Mensual" : "Puntual"
       end
       row :amount do |order|
         number_to_euro order.amount
