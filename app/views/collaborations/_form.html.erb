@@ -8,7 +8,8 @@
     <%= f.input :type_amount,
                 required: true,
                 as: :select,
-                collection: Collaboration::TYPE_AMOUNT %>
+                collection: Collaboration::TYPE_AMOUNT.to_a,
+                input_html: {required: true, class: 'js-collaboration-amount'}%>
   </div>
 
   <div class="inputlabel-box">
