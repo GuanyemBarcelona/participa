@@ -2,7 +2,7 @@
 require_dependency Rails.root.join('app', 'models', 'user').to_s
 
 class User
-	
+
 	belongs_to :verified_by, class_name: "User", foreign_key: "verified_by_id" #, counter_cache: :verified_by_id
 
   validates :district, presence: true
@@ -44,12 +44,12 @@ class User
   def vote_district_code
     "d_%02d" % + self.district
   end
-  
+
   def verify! user
     self.verified_at = DateTime.now
     self.verified_by = user
     self.save
-    VerificationMailer.verified(self).deliver
+    VerificationMailer.verified(self).deliver_now
   end
 
   def list_groups

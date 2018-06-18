@@ -1,9 +1,9 @@
 require 'test_helper'
 
 class CollaborationsControllerTest < ActionController::TestCase
-  
+
   setup do
-    @collaboration = FactoryGirl.create(:collaboration)
+    @collaboration = FactoryBot.create(:collaboration)
     @user = @collaboration.user
   end
 
@@ -22,7 +22,7 @@ class CollaborationsControllerTest < ActionController::TestCase
   end
 
   test "should create collaboration" do
-    user = FactoryGirl.create(:user)
+    user = FactoryBot.create(:user)
     sign_in user
     assert_difference('Collaboration.count') do
       post :create, collaboration: { amount: 500, frequency: 12, payment_type: 1, terms_of_service: 1, minimal_year_old: 1 }
@@ -56,16 +56,16 @@ class CollaborationsControllerTest < ActionController::TestCase
   end
 
  # test "should post callback" do
- #   collaboration = FactoryGirl.create(:collaboration, :credit_card) 
+ #   collaboration = FactoryBot.create(:collaboration, :credit_card)
  #   order = "1418300282"
  #   #collaboration.update_attribute(:redsys_order, order)
 
- #   user = collaboration.user 
+ #   user = collaboration.user
  #   merchant_code = "1111111111"
  #   Rails.application.secrets.redsys["code"] = merchant_code
  #   Rails.application.secrets.redsys["terminal"] = "1"
  #   Rails.application.secrets.redsys["secret_key"] = "1234567890"
- #   
+ #
 
  #   sign_in user
  #   post :orders_callback_redsys, "user_id"=>collaboration.user.id, "collaboration_id"=>collaboration.id, "Ds_Date"=>"11/12/2014", "Ds_Hour"=>"13:19", "Ds_SecurePayment"=>"1", "Ds_Card_Country"=>"724", "Ds_Amount"=>"2000", "Ds_Currency"=>"978", "Ds_Order"=>order, "Ds_MerchantCode"=>merchant_code, "Ds_Terminal"=>"001", "Ds_Signature"=>collaboration.redsys_identifier, "Ds_Response"=>"0000", "Ds_MerchantData"=>"", "Ds_TransactionType"=>"0", "Ds_ConsumerLanguage"=>"1", "Ds_AuthorisationCode"=>"914395"
@@ -81,14 +81,14 @@ class CollaborationsControllerTest < ActionController::TestCase
  # end
 
   #test "should not get redsys_status for order as anon" do
-    #  collaboration = FactoryGirl.create(:collaboration, :credit_card) 
+    #  collaboration = FactoryBot.create(:collaboration, :credit_card)
   #  get :redsys_status, order: collaboration.redsys_order
   #  assert_response :redirect
   #  assert_redirected_to '/users/sign_in'
   #end
 
   #test "should get redsys_status for order as user" do
-  #  collaboration = FactoryGirl.create(:collaboration, :credit_card) 
+  #  collaboration = FactoryBot.create(:collaboration, :credit_card)
   #  sign_in collaboration.user
   #  get :redsys_status, order: collaboration.redsys_order, format: :json
   #  assert_response :success
