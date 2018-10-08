@@ -56,7 +56,7 @@ class Order < ActiveRecord::Base
   end
 
   def type_amount
-    "RCUR" if collaboration.type_amount == "recursive"
+    due_code if collaboration.type_amount == "recursive"
     "OOFF" if collaboration.type_amount == "single"
   end
 
