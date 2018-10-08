@@ -3,7 +3,7 @@ class PodemosCollaborationSepaWorker
   #@queue = :podemos_collaboration_sepa_queue
   
   def self.read_orders
-    orders = Order.all #to_be_paid.joins(:collaboration).where("collaborations.payment_type in (2,3)")
+    orders = Order.to_be_paid.joins(:collaboration).where("collaborations.payment_type in (2,3)")
     return orders
   end
   
@@ -26,21 +26,21 @@ class PodemosCollaborationSepaWorker
     sdd = SEPA::DirectDebit.new(
       # Name of the initiating party and creditor, in German: "Auftraggeber"
       # String, max. 70 char
-      name: "DEMO", # Rails.application.secrets.sepa['name'], # Entiendo que es el nombre con el que figura
+      name: Rails.application.secrets.sepa['name'], # Entiendo que es el nombre con el que figura
                                                     # BCN en Comú en el banco
 
       # OPTIONAL: Business Identifier Code (SWIFT-Code) of the creditor
       # String, 8 or 11 char
-      bic: "BMARES2MXXX", # Rails.application.secrets.sepa['bic'], # Código BIC del banco de BCN en Comú
+      bic: Rails.application.secrets.sepa['bic'], # Código BIC del banco de BCN en Comú
 
       # International Bank Account Number of the creditor
       # String, max. 34 chars
-      iban: "ES6621000418401234567891", #Rails.application.secrets.sepa['iban'], # Número de cuenta en formato IBAN
+      iban: Rails.application.secrets.sepa['iban'], # Número de cuenta en formato IBAN
                                                     # de BCN en Comú
 
       # Creditor Identifier, in German: Gläubiger-Identifikationsnummer
       # String, max. 35 chars
-      creditor_identifier: "AT97ZZZ01234567890", #Rails.application.secrets.sepa['creditor_identifier'] # FIXME esto no se lo qué es
+      creditor_identifier: Rails.application.secrets.sepa['creditor_identifier'] # FIXME esto no se lo qué es
                                                                                  # Identificador de BCN en Comú en el banco
     )
 
