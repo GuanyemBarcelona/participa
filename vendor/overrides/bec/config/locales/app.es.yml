@@ -263,8 +263,8 @@ Al marcar la casilla “He leído y acepto las condiciones generales" el USUARIO
       </span>
       <ol>
         <li><span class='welcome-number'>1</span><span class='welcome-thumb'>%{logo_inscription}</span><span class='welcome-text'><b>Inscripción por Internet</b>: Rellena este formulario. Revisa tu correo y confírmalo con el enlace que te enviamos.</span></li>
-        <li><span class='welcome-number'>2</span><span class='welcome-thumb'>%{logo_verification}</span><span class='welcome-text'><b>Verificación presencial</b>: Deberás llevar documentación que acredite tu identidad y residencia en Barcelona en alguno de los Puntos de Verificación.</span></li>
-        <li><span class='welcome-number'>3</span><span class='welcome-thumb'>%{logo_voting}</span><span class='welcome-text'><b>Votación por Internet</b>: Te avisaremos por correo cuando puedas votar en las próximas votaciones.</span></li>
+        <li><span class='welcome-number'>2</span><span class='welcome-thumb'>%{logo_verification}</span><span class='welcome-text'><b>Verificación presencial</b>: Deberás llevar documentación que acredite tu identidad y residencia en Barcelona en la calle Marina 131, de lunes a viernes de 10 a 20h.</span></li>
+        <li><span class='welcome-number'>3</span><span class='welcome-thumb'>%{logo_voting}</span><span class='welcome-text'><b>Votación por Internet</b>: Te avisaremos por correo cuando puedas participar en algunos de los siguientes procesos: Aprobar los programas electorales, después de un proceso de elaboración participativa; Participar en los procesos de confección y elección de las listas electorales para optar a cargos públicos para las instituciones de representación; Participar en las consultas sobre pactos electorales con otras fuerzas políticas; Solicitar el inicio de procesos revocatorios de los cargos electos públicos; Aprobar los cambios y modificaciones de los estatutos de la organización; Participar en consultas con caracter vinculante respecto a cualquier asunto de especial relevancia para la ciudadanía.</span></li>
       </ol>"
         dni: "El formato debe ser 8 números y una letra, sin guiones ni espacios."
         nie: "El formato debe ser una letra, 7 números y una letra, sin guiones ni espacios."
@@ -683,11 +683,10 @@ Barcelona en Comú cumple con todas las medidas de seguridad para la protección
   <a target="_blank" href="https://barcelonaencomu.cat/es/politica-de-privacidad">Véase la política de privacidad</a><br>
 <a target="_blank" href="https://barcelonaencomu.cat/es/aviso-legal">Véase el aviso legal</a><br>
 <a target="_blank" href="https://barcelonaencomu.cat/es/politica-de-cookies">Véase la política de Cookies</a></p>'
-  welcome_html: "<p><strong>¡Te damos la bienvenida al portal de participación de Barcelona En Comú !</strong></p>
-    <p>
-    Somos una plataforma ciudadana con un proyecto colectivo para transformar Barcelona. Una comunidad amplia y diversa que trabaja para convertir Barcelona en un referente de la democracia, la participación, la transparencia, los derechos sociales, la defensa del bien común y la lucha contra la desigualdad y la corrupción.
-    </p>
-    <p>¡Inscríbete y participa! Construyamos en común la ciudad en la que queremos vivir.</p>"
+  welcome_html: "<p><strong>¡Te damos la bienvenida a Barcelona En Comú!</strong></p>
+    <p>Somos una plataforma ciudadana con un proyecto colectivo para transformar Barcelona. Una comunidad amplia y diversa que trabaja para convertir Barcelona en un referente de la democracia, la participación, la transparencia, los derechos sociales, la defensa del bien común y la lucha contra la desigualdad y la corrupción.</p>
+    <p>En Barcelona En Comú puedes <a href='http://ada2019.barcelona/es' target='_blank'>implicarte como activista</a>, y también puedes tomar parte de las decisiones más importantes de la organización y de la ciudad, com ara: la votació de les mesures més rellevants del programa electoral per les municipals 2019.</p>
+    <p>¡Inscríbete y participa!</p>"
   welcome_count_html: "Usuarios inscritos: <span>%{count_all_users}</span><br>Usuarios inscritos y verificados: <span>%{count_verif_users}</span>"
   voting:
     title: "Bienvenido a Participa"
