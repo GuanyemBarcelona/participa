@@ -6,6 +6,9 @@
     <div class="col-b-4a12">
       <div class="verif-new-third">
         <p class="title"><%= t('.title') %></p>
+        <% unless Rails.application.secrets.features["allow_inscription"] %>
+           <p class="title"> <%= t('verification.closed_inscriptions') %> </p>
+        <% end %>
         <p class="title"> <%= t('verification.pending8_html') %> </p>
         <p><%= t('.explain_html', inscription_link: link_to(t('.link_title'), new_user_registration_path)) %> </p>
         <%= render partial: "verification/map", locals: {centers: @centers} %>
