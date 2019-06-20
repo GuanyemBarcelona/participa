@@ -278,6 +278,8 @@ ActiveAdmin.register User do
     column :phone
     column :current_sign_in_ip
     column :last_sign_in_ip
+    column :created_at
+    column :verified_at
   end
 
   action_item(:verify, only: :show) do
